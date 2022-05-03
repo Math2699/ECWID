@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://pay.payphonetodoesposible.com/api/button/js?appId=ACATUIDDEAPLICACION"></script>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+        payphone.Button({
+        
+        //token obtenido desde la consola de developer
+        token: "TU-TOKEN-DE-AUTENTICACIÓN-AQUI",
+        
+        //PARÁMETROS DE CONFIGURACIÓN
+        btnHorizontal: true,
+        btnCard: true,
+        
+        createOrder: function(actions){
+        
+        //Se ingresan los datos de la transaccion ej. monto, impuestos, etc
+        return actions.prepare({
+        
+        amount: 100,
+        amountWithoutTax: 100,
+        currency: "USD",
+        clientTransactionId: "identificador-único"
+        });
+        
+        },
+        onComplete: function(model, actions){
+        
+        //Se confirma el pago realizado
+        actions.confirm({
+        id: model.id,
+        clientTxId: model.clientTxId
+        }).then(function(value){
+        
+        //EN ESTA SECCIÓN SE RECIBE LA RESPUESTA Y SE MUESTRA AL USUARIO
+        
+        if (value.transactionStatus == "Approved"){
+        alert("Pago " + value.transactionId + " recibido, estado " + value.transactionStatus );
+        }
+        }).catch(function(err){
+        console.log(err);
+        });
+        
+        }
+        }).render("#pp-button");
+        
+        }
+        </script>
+        <div id="pp-button"></div>
+</body>
+
+</html>
